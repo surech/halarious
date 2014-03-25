@@ -4,18 +4,11 @@
  */
 package ch.halarious.core;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
+import com.google.gson.*;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Adapter zum Serialisieren von HAL-Resourcen nach Json.
@@ -31,6 +24,10 @@ public class HalSerializer implements JsonSerializer<HalResource> {
         // Gefundene Links und einbettete Resourcen
         Map<String, List<HalReference>> links = new HashMap<>();
         Map<String, List<HalResource>> embedded = new HashMap<>();
+
+        // Wir merken uns, bei welchen Feldern es sich um Listen handelt. Dies wird benötigt, um
+        // die später im JSON korrekt abzubilden
+        Set<String> embeddedLists = new HashSet<>();
 
         Class<? extends HalResource> hal = t.getClass();
         List<Field> fields = HalReflectionHelper.getAllFields(hal);
@@ -56,13 +53,13 @@ public class HalSerializer implements JsonSerializer<HalResource> {
                 Object value = HalReflectionHelper.getValue(field, t);
 
                 // Je nach Typ geht es weiter
-                readResource(value, resName, embedded);
+                readResource(value, resName, embedded, embeddedLists);
             }
         }
 
         // Die Links und eingebettete Resourcen ans JSON anhängen
         attachLinksToJson(element, links, jsc);
-        attachEmbeddedToJson(element, embedded, jsc);
+        attachEmbeddedToJson(element, embedded, embeddedLists, jsc);
 
         return element;
     }
@@ -143,8 +140,9 @@ public class HalSerializer implements JsonSerializer<HalResource> {
      * @param value Wert des Feldes
      * @param resName Name der Resource
      * @param embedded Liste mit den Resourcen
+     * @param embeddedLists Hier wird vermerkt, wenn es sich beim Feld um eine Liste handelt
      */
-    protected void readResource(Object value, String resName, Map<String, List<HalResource>> embedded) {
+    protected void readResource(Object value, String resName, Map<String, List<HalResource>> embedded, Set<String> embeddedLists) {
         // Wenn der Wert null ist, können wir nichts machen
         if (value == null) {
             return;
@@ -160,8 +158,9 @@ public class HalSerializer implements JsonSerializer<HalResource> {
             list.add((HalResource) value);
         } else if (value instanceof Collection) {
             // Es handelt sich um eine Collection
+            embeddedLists.add(resName);
             for (Object v : ((Collection) value)) {
-                readResource(v, resName, embedded);
+                readResource(v, resName, embedded, embeddedLists);
             }
         }
     }
@@ -207,7 +206,7 @@ public class HalSerializer implements JsonSerializer<HalResource> {
         }
     }
 
-    private void attachEmbeddedToJson(JsonObject element, Map<String, List<HalResource>> embedded, JsonSerializationContext jsc) {
+    private void attachEmbeddedToJson(JsonObject element, Map<String, List<HalResource>> embedded, Set<String> embeddedLists, JsonSerializationContext jsc) {
         // Wenn wir keine Resourcen haben, müssen wir auch nichts machen
         if (embedded.isEmpty()) {
             return;
@@ -226,17 +225,17 @@ public class HalSerializer implements JsonSerializer<HalResource> {
             }
 
             // Zwischen einem und mehreren Einträgen unterscheiden
-            if (list.size() == 1) {
-                HalResource res = list.get(0);
-                JsonElement json = jsc.serialize(res, HalResource.class);
-                root.add(key, json);
-            } else {
+            if(list.size() > 1 || embeddedLists.contains(key)){
                 JsonArray array = new JsonArray();
                 for (HalResource res : list) {
                     JsonElement json = jsc.serialize(res, HalResource.class);
                     array.add(json);
                 }
                 root.add(key, array);
+            } else {
+                HalResource res = list.get(0);
+                JsonElement json = jsc.serialize(res, HalResource.class);
+                root.add(key, json);
             }
         }
     }
