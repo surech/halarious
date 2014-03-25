@@ -15,9 +15,9 @@
     </properties>
     
     <scm>
-        <connection>scm:svn:http://svn.zugut.ch/repos/halarious/trunk/halarious-core/</connection>
-        <developerConnection>scm:svn:http://svn.zugut.ch/repos/halarious/trunk/halarious-core/</developerConnection>
-        <url>scm:svn:http://svn.zugut.ch/repos/halarious/trunk/halarious-core/</url>
+        <connection>scm:git:git://github.com/surech/halarious.git</connection>
+        <developerConnection>scm:git:git://github.com/surech/halarious.git</developerConnection>
+        <url>scm:git:git://github.com/surech/halarious.git</url>
     </scm>
 
     <distributionManagement>
