@@ -4,14 +4,13 @@
  */
 package ch.halarious.core;
 
-import ch.halarious.core.HalReflectionHelper;
-import ch.halarious.core.HalReferenceMetaData;
-import java.lang.reflect.Field;
 import junit.framework.Assert;
 import org.junit.Test;
 
+import java.lang.reflect.Field;
+
 /**
- * Test für die Klasse {@link HalHelper}
+ * Test für die Klasse {@link HalReflectionHelper}
  *
  * @author surech
  */

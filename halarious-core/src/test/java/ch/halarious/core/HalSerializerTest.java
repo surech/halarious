@@ -4,20 +4,14 @@
  */
 package ch.halarious.core;
 
-import ch.halarious.core.HalReference;
-import ch.halarious.core.HalSerializer;
-import ch.halarious.core.HalResource;
-import ch.halarious.core.HalReferenceMetaData;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.*;
+
 /**
- * Test für die Klasse {@link HalAdapter}
+ * Test für die Klasse {@link HalSerializer}
  *
  * @author surech
  */
@@ -79,33 +73,38 @@ public class HalSerializerTest {
     public void testReadResource() {
         // Testdaten erstellen
         Map<String, List<HalResource>> embedded = new HashMap<>();
+        Set<String> embeddedLists = new HashSet<>();
         TestResource res = new TestResource();
 
         // Test ausführen
-        adapter.readResource(res, "test", embedded);
+        adapter.readResource(res, "test", embedded, embeddedLists);
 
         // Überprüfen
         Assert.assertEquals(1, embedded.size());
         List<HalResource> list = embedded.get("test");
         Assert.assertNotNull(list);
         Assert.assertEquals(1, list.size());
+        Assert.assertTrue(embeddedLists.isEmpty());
     }
 
     @Test
     public void testReadResourceList() {
         // Testdaten erstellen
         Map<String, List<HalResource>> embedded = new HashMap<>();
+        Set<String> embeddedLists = new HashSet<>();
         List<TestResource> res = new ArrayList<>();
         res.add(new TestResource());
         res.add(new TestResource());
 
         // Test ausführen
-        adapter.readResource(res, "test", embedded);
+        adapter.readResource(res, "test", embedded, embeddedLists);
 
         // Überprüfen
         Assert.assertEquals(1, embedded.size());
         List<HalResource> list = embedded.get("test");
         Assert.assertNotNull(list);
         Assert.assertEquals(2, list.size());
+        Assert.assertEquals(1, embeddedLists.size());
+        Assert.assertTrue(embeddedLists.contains("test"));
     }
 }
