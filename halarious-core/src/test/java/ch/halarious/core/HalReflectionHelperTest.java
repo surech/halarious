@@ -21,7 +21,7 @@ import org.junit.Test;
 import java.lang.reflect.Field;
 
 /**
- * Test für die Klasse {@link HalHelper}
+ * Test für die Klasse {@link HalReflectionHelper}
  *
  * @author surech
  */
