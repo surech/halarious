@@ -1,0 +1,8 @@
+halarious - Java-Framework for HAL-Resources
+Copyright 2014 Stefan Urech
+
+This Software is based on Google Gson
+https://code.google.com/p/google-gson/
+
+Unit-Testing with JUnit
+http://junit.org/
