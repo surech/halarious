@@ -58,3 +58,7 @@ This generates the following json:
     }
 }
 ```
+
+### Licence
+
+halarious is available under the [Apache 2.0 Licence](http://www.apache.org/licenses/LICENSE-2.0).

@@ -4,7 +4,7 @@
 
     <groupId>ch.halarious</groupId>
     <artifactId>halarious-core</artifactId>
-    <version>0.12-SNAPSHOT</version>
+    <version>0.13-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Halarious Core</name>
@@ -16,9 +16,9 @@
     </properties>
 
     <scm>
-        <connection>scm:git:git://github.com/surech/halarious.git</connection>
-        <developerConnection>scm:git:git://github.com/surech/halarious.git</developerConnection>
-        <url>scm:git:git://github.com/surech/halarious.git</url>
+        <connection>scm:git:ssh://github.com:surech/halarious.git</connection>
+        <developerConnection>scm:git:ssh://github.com:surech/halarious.git</developerConnection>
+        <url>scm:git:ssh://github.com:surech/halarious.git</url>
     </scm>
 
     <distributionManagement>
@@ -69,6 +69,8 @@
                 <configuration>
                     <!-- Whether to push release branches to the remote upstream. -->
                     <pushReleases>true</pushReleases>
+                    <username>${githubUser}</username>
+                    <password>${githubPassword}</password>
                 </configuration>
             </plugin>
         </plugins>
