@@ -67,7 +67,8 @@
                 <artifactId>jgitflow-maven-plugin</artifactId>
                 <version>1.0-m3</version>
                 <configuration>
-                    <!-- see goals wiki page for configuration options -->
+                    <!-- Whether to push release branches to the remote upstream. -->
+                    <pushReleases>true</pushReleases>
                 </configuration>
             </plugin>
         </plugins>
