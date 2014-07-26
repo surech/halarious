@@ -69,6 +69,8 @@
                 <configuration>
                     <!-- Whether to push release branches to the remote upstream. -->
                     <pushReleases>true</pushReleases>
+                    <username>${githubUser}</username>
+                    <password>${githubPassword}</password>
                 </configuration>
             </plugin>
         </plugins>
