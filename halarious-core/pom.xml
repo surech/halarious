@@ -16,9 +16,9 @@
     </properties>
 
     <scm>
-        <connection>scm:git:git://github.com/surech/halarious.git</connection>
-        <developerConnection>scm:git:git://github.com/surech/halarious.git</developerConnection>
-        <url>scm:git:git://github.com/surech/halarious.git</url>
+        <connection>scm:git:ssh://github.com:surech/halarious.git</connection>
+        <developerConnection>scm:git:ssh://github.com:surech/halarious.git</developerConnection>
+        <url>scm:git:ssh://github.com:surech/halarious.git</url>
     </scm>
 
     <distributionManagement>
