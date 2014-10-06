@@ -65,7 +65,7 @@
             <plugin>
                 <groupId>external.atlassian.jgitflow</groupId>
                 <artifactId>jgitflow-maven-plugin</artifactId>
-                <version>1.0-m3</version>
+                <version>1.0-m4.3</version>
                 <configuration>
                     <!-- Whether to push release branches to the remote upstream. -->
                     <pushReleases>true</pushReleases>
