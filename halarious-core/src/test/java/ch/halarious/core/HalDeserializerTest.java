@@ -115,4 +115,14 @@ public class HalDeserializerTest {
         Assert.assertEquals("Erstes Objekt", result.getResources().get(0).getFilledText());
         Assert.assertEquals("Zweites Objekt", result.getResources().get(1).getFilledText());
     }
+    
+    @Test
+    public void testHalResourceObjectToCollection() {
+    	String json = "{\"_embedded\": { \"test\":{ \"_links\":{ \"self\": { \"href\": \"/path/2717\" }}}}, \"filledText\":\"Ein Text\" }";
+    	
+    	TestResource result = (TestResource) gson.fromJson(json, HalResource.class);
+    	
+    	Assert.assertEquals("Ein Text", result.getFilledText());
+    	Assert.assertEquals("/path/2717", result.getResources().get(0).getLinkText());
+    }
 }
