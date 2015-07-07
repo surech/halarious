@@ -8,6 +8,24 @@
     <packaging>jar</packaging>
 
     <name>Halarious Core</name>
+    <description>halarious is a simple framework for serializing and deserializing Java-Classes to JSON following the HAL-specification.</description>
+    <url>http://www.halarious.ch</url>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Stefan Urech</name>
+            <email>stefan@surech.ch</email>
+            <organization>surech.ch</organization>
+            <url>http://www.surech.ch</url>
+        </developer>
+    </developers>
 
     <properties>
         <java.version>1.7</java.version>
@@ -21,16 +39,27 @@
         <url>scm:git:ssh://github.com:surech/halarious.git</url>
     </scm>
 
-    <distributionManagement>
-        <repository>
-            <id>hosted.halarious.releases</id>
-            <url>http://repo.surech.ch/content/repositories/hosted.halarious.releases</url>
-        </repository>
+    <!--<distributionManagement>-->
+        <!--<repository>-->
+            <!--<id>hosted.halarious.releases</id>-->
+            <!--<url>http://repo.surech.ch/content/repositories/hosted.halarious.releases</url>-->
+        <!--</repository>-->
 
+        <!--<snapshotRepository>-->
+            <!--<id>hosted.halarious.snapshots</id>-->
+            <!--<url>http://repo.surech.ch/content/repositories/hosted.halarious.snapshots</url>-->
+        <!--</snapshotRepository>-->
+    <!--</distributionManagement>-->
+
+    <distributionManagement>
         <snapshotRepository>
-            <id>hosted.halarious.snapshots</id>
-            <url>http://repo.surech.ch/content/repositories/hosted.halarious.snapshots</url>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
     </distributionManagement>
 
     <dependencies>
@@ -63,6 +92,17 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.3</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>external.atlassian.jgitflow</groupId>
                 <artifactId>jgitflow-maven-plugin</artifactId>
                 <version>1.0-m4.3</version>
@@ -75,4 +115,28 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>sign</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.5</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

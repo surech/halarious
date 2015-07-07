@@ -20,5 +20,5 @@ package ch.halarious.core;
  *
  * @author surech
  */
-public interface HalResource {
+public interface HalResource <T> {
 }
