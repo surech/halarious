@@ -159,18 +159,19 @@ public class HalDeserializer implements JsonDeserializer<HalResource> {
                 }
             }
         } else if (Collection.class.isAssignableFrom(field.getType())) {
-            // Wir erwarten ein JSON-Array
+        	
+        	Collection collection = (Collection) HalReflectionHelper.getValue(field, result);
+        	
+            // Generischer Type auslesen
+            ParameterizedType gType = (ParameterizedType) field.getGenericType();
+            Type[] actualTypeArguments = gType.getActualTypeArguments();
+
+            if (collection == null) {
+                throw new HalDeserializingException("Collection is null; no values can be added");
+            }
+
+        	// Wir erwarten ein JSON-Array
             if (jsonField.isJsonArray()) {
-                // Collection auslesen
-                Collection collection = (Collection) HalReflectionHelper.getValue(field, result);
-
-                // Generischer Type auslesen
-                ParameterizedType gType = (ParameterizedType) field.getGenericType();
-                Type[] actualTypeArguments = gType.getActualTypeArguments();
-
-                if (collection == null) {
-                    throw new HalDeserializingException("Collection is null; no values can be added");
-                }
 
                 JsonArray jsonArray = jsonField.getAsJsonArray();
                 Iterator<JsonElement> iterator = jsonArray.iterator();
@@ -179,6 +180,10 @@ public class HalDeserializer implements JsonDeserializer<HalResource> {
                     JsonElement element = iterator.next();
                     writeEmbeddedInCollection(collection, actualTypeArguments[0], element, context);
                 }
+            }
+            else if(jsonField.isJsonObject())
+            {
+            	writeEmbeddedInCollection(collection, actualTypeArguments[0], jsonField, context);
             }
         }
     }
