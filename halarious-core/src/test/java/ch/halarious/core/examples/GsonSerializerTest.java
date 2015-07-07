@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import junit.framework.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -40,6 +41,7 @@ public class GsonSerializerTest {
     }
 
     @Test
+    @Ignore
     public void testEmbeddedList() {
         // Testdaten erstellen
         TestResource resource = new TestResource();
@@ -55,6 +57,7 @@ public class GsonSerializerTest {
     }
 
     @Test
+    @Ignore
     public void testEmbeddedListWithOneElement() {
         // Testdaten erstellen
         TestResource resource = new TestResource();
