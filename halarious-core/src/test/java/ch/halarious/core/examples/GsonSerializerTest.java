@@ -41,7 +41,6 @@ public class GsonSerializerTest {
     }
 
     @Test
-    @Ignore
     public void testEmbeddedList() {
         // Testdaten erstellen
         TestResource resource = new TestResource();
@@ -52,12 +51,11 @@ public class GsonSerializerTest {
         String result = gson.toJson(resource, HalResource.class);
 
         // Überprüfen
-        Assert.assertEquals("{\"filledText\":\"test\",\"_links\":{\"self\":{\"href\":\"link\",\"title\":\"Test\"},\"reference\":{}},\"_embedded\":{\"test\":[{\"filledText\":\"test\",\"_links\":{\"self\":{\"href\":\"link\",\"title\":\"Test\"},\"reference\":{}}},{\"filledText\":\"test\",\"_links\":{\"self\":{\"href\":\"link\",\"title\":\"Test\"},\"reference\":{}}}]}}", result);
+        Assert.assertEquals("{\"filledText\":\"test\",\"_links\":{\"reference\":{},\"self\":{\"href\":\"link\",\"title\":\"Test\"}},\"_embedded\":{\"test\":[{\"filledText\":\"test\",\"_links\":{\"reference\":{},\"self\":{\"href\":\"link\",\"title\":\"Test\"}}},{\"filledText\":\"test\",\"_links\":{\"reference\":{},\"self\":{\"href\":\"link\",\"title\":\"Test\"}}}]}}", result);
         System.out.println(result);
     }
 
     @Test
-    @Ignore
     public void testEmbeddedListWithOneElement() {
         // Testdaten erstellen
         TestResource resource = new TestResource();
@@ -67,7 +65,7 @@ public class GsonSerializerTest {
         String result = gson.toJson(resource, HalResource.class);
 
         // Überprüfen
-        Assert.assertEquals("{\"filledText\":\"test\",\"_links\":{\"self\":{\"href\":\"link\",\"title\":\"Test\"},\"reference\":{}},\"_embedded\":{\"test\":[{\"filledText\":\"test\",\"_links\":{\"self\":{\"href\":\"link\",\"title\":\"Test\"},\"reference\":{}}}]}}", result);
+        Assert.assertEquals("{\"filledText\":\"test\",\"_links\":{\"reference\":{},\"self\":{\"href\":\"link\",\"title\":\"Test\"}},\"_embedded\":{\"test\":[{\"filledText\":\"test\",\"_links\":{\"reference\":{},\"self\":{\"href\":\"link\",\"title\":\"Test\"}}}]}}", result);
         System.out.println(result);
     }
 }
