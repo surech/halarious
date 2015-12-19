@@ -44,6 +44,9 @@ public class TestResource implements HalResource {
     @HalEmbedded(name = "test")
     private List<TestResource> resources = new ArrayList<>();
 
+    @HalEmbedded(name = "children")
+    private List<TestChildResource> children = new ArrayList<>();
+
     public String getNullText() {
         return nullText;
     }
@@ -78,5 +81,9 @@ public class TestResource implements HalResource {
 
     public List<TestResource> getResources() {
         return resources;
+    }
+
+    public List<TestChildResource> getChildren() {
+        return children;
     }
 }

@@ -82,7 +82,6 @@ public class GsonSerializerTest {
         String result = gson.toJson(resource, HalResource.class);
 
         // Überprüfen
-        // Überprüfen
         JsonReader reader = Json.createReader(new StringReader(result));
         JsonObject root = reader.readObject();
         assertEquals("test", root.getString("filledText"));
@@ -93,5 +92,28 @@ public class GsonSerializerTest {
         assertEquals("test", root.getJsonObject("_embedded").getJsonArray("test").getJsonObject(0).getString("filledText"));
 
         System.out.println(result);
+    }
+
+    @Test
+    public void testWithEmbeddedChild() throws Exception {
+        // Testdaten erstellen
+        TestResource resource = new TestResource();
+        resource.getChildren().add(new TestChildResource("Muster", "Hans"));
+        resource.getChildren().add(new TestChildResource("Mueller", "Peter"));
+
+        // Test durchführen
+        String result = gson.toJson(resource, HalResource.class);
+        System.out.println(result);
+
+        // Überprüfen
+        JsonReader reader = Json.createReader(new StringReader(result));
+        JsonObject root = reader.readObject();
+        assertEquals("test", root.getString("filledText"));
+        assertEquals("link", root.getJsonObject("_links").getJsonObject("self").getString("href"));
+        assertEquals("Test", root.getJsonObject("_links").getJsonObject("self").getString("title"));
+
+        assertEquals(2, root.getJsonObject("_embedded").getJsonArray("children").size());
+        assertEquals("Muster", root.getJsonObject("_embedded").getJsonArray("children").getJsonObject(0).getString("name"));
+        assertEquals("Mueller", root.getJsonObject("_embedded").getJsonArray("children").getJsonObject(1).getString("name"));
     }
 }
