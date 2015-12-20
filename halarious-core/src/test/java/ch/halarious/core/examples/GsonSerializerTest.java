@@ -18,10 +18,19 @@ package ch.halarious.core.examples;
 import ch.halarious.core.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
+import javax.json.JsonStructure;
+import java.io.StringReader;
+
+import static junit.framework.Assert.assertEquals;
 
 /**
  * End-to-End-Test für die Serialisierung mit GSON
@@ -41,7 +50,6 @@ public class GsonSerializerTest {
     }
 
     @Test
-    @Ignore
     public void testEmbeddedList() {
         // Testdaten erstellen
         TestResource resource = new TestResource();
@@ -52,12 +60,19 @@ public class GsonSerializerTest {
         String result = gson.toJson(resource, HalResource.class);
 
         // Überprüfen
-        Assert.assertEquals("{\"filledText\":\"test\",\"_links\":{\"self\":{\"href\":\"link\",\"title\":\"Test\"},\"reference\":{}},\"_embedded\":{\"test\":[{\"filledText\":\"test\",\"_links\":{\"self\":{\"href\":\"link\",\"title\":\"Test\"},\"reference\":{}}},{\"filledText\":\"test\",\"_links\":{\"self\":{\"href\":\"link\",\"title\":\"Test\"},\"reference\":{}}}]}}", result);
+        JsonReader reader = Json.createReader(new StringReader(result));
+        JsonObject root = reader.readObject();
+        assertEquals("test", root.getString("filledText"));
+        assertEquals("link", root.getJsonObject("_links").getJsonObject("self").getString("href"));
+        assertEquals("Test", root.getJsonObject("_links").getJsonObject("self").getString("title"));
+
+        assertEquals(2, root.getJsonObject("_embedded").getJsonArray("test").size());
+        assertEquals("test", root.getJsonObject("_embedded").getJsonArray("test").getJsonObject(0).getString("filledText"));
+
         System.out.println(result);
     }
 
     @Test
-    @Ignore
     public void testEmbeddedListWithOneElement() {
         // Testdaten erstellen
         TestResource resource = new TestResource();
@@ -67,7 +82,38 @@ public class GsonSerializerTest {
         String result = gson.toJson(resource, HalResource.class);
 
         // Überprüfen
-        Assert.assertEquals("{\"filledText\":\"test\",\"_links\":{\"self\":{\"href\":\"link\",\"title\":\"Test\"},\"reference\":{}},\"_embedded\":{\"test\":[{\"filledText\":\"test\",\"_links\":{\"self\":{\"href\":\"link\",\"title\":\"Test\"},\"reference\":{}}}]}}", result);
+        JsonReader reader = Json.createReader(new StringReader(result));
+        JsonObject root = reader.readObject();
+        assertEquals("test", root.getString("filledText"));
+        assertEquals("link", root.getJsonObject("_links").getJsonObject("self").getString("href"));
+        assertEquals("Test", root.getJsonObject("_links").getJsonObject("self").getString("title"));
+
+        assertEquals(1, root.getJsonObject("_embedded").getJsonArray("test").size());
+        assertEquals("test", root.getJsonObject("_embedded").getJsonArray("test").getJsonObject(0).getString("filledText"));
+
         System.out.println(result);
+    }
+
+    @Test
+    public void testWithEmbeddedChild() throws Exception {
+        // Testdaten erstellen
+        TestResource resource = new TestResource();
+        resource.getChildren().add(new TestChildResource("Muster", "Hans"));
+        resource.getChildren().add(new TestChildResource("Mueller", "Peter"));
+
+        // Test durchführen
+        String result = gson.toJson(resource, HalResource.class);
+        System.out.println(result);
+
+        // Überprüfen
+        JsonReader reader = Json.createReader(new StringReader(result));
+        JsonObject root = reader.readObject();
+        assertEquals("test", root.getString("filledText"));
+        assertEquals("link", root.getJsonObject("_links").getJsonObject("self").getString("href"));
+        assertEquals("Test", root.getJsonObject("_links").getJsonObject("self").getString("title"));
+
+        assertEquals(2, root.getJsonObject("_embedded").getJsonArray("children").size());
+        assertEquals("Muster", root.getJsonObject("_embedded").getJsonArray("children").getJsonObject(0).getString("name"));
+        assertEquals("Mueller", root.getJsonObject("_embedded").getJsonArray("children").getJsonObject(1).getString("name"));
     }
 }
