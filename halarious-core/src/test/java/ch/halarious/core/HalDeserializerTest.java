@@ -79,7 +79,7 @@ public class HalDeserializerTest {
 
     @Test
     public void testHalReferenceCollection() {
-        String json = "{ \"_links\":{ \"reference\":{ \"href\":\"/path/3141\", \"title\":\"Ein Titel\" }, \"linkList\":[ { \"href\":\"/link/452\" }, { \"href\":\"/link/832\", \"title\":\"Noch ein Link\" } ] }, \"filledText\":\"Ein Text\" } ";
+        String json = "{ \"_links\":{ \"reference\":{ \"href\":\"/path/3141\", \"title\":\"Ein Titel\" }, \"linkList\":[ { \"href\":\"/link/452\" }, { \"href\":\"/link/832\", \"title\":\"Noch ein Link\" } ], \"linkList2\":[ { \"href\":\"/link/453\" }, { \"href\":\"/link/833\", \"title\":\"Noch ein Link\" } ], \"filledText\":\"Ein Text\" } }";
         TestResource result = (TestResource) gson.fromJson(json, HalResource.class);
 
         // Überprüfen
@@ -90,6 +90,10 @@ public class HalDeserializerTest {
         Assert.assertEquals("/link/452", result.getLinkList().get(0).getHref());
         Assert.assertEquals("/link/832", result.getLinkList().get(1).getHref());
         Assert.assertEquals("Noch ein Link", result.getLinkList().get(1).getTitle());
+        Assert.assertEquals(2, result.getNullLinkList().size());
+        Assert.assertEquals("/link/453", result.getNullLinkList().get(0).getHref());
+        Assert.assertEquals("/link/833", result.getNullLinkList().get(1).getHref());
+        Assert.assertEquals("Noch ein Link", result.getNullLinkList().get(1).getTitle());
     }
 
     @Test
