@@ -26,7 +26,7 @@ public class TestResource implements HalResource {
 
     private String nullText = null;
 
-    private String filledText = "test";
+    private String filledText = "Ein Text";
 
     @HalLink(name = "self", title = "Test")
     private String linkText = "link";
@@ -39,10 +39,16 @@ public class TestResource implements HalResource {
 
     private List<HalReference> linkList = new ArrayList<>();
 
+    @HalLink(name = "linkList2")
+    private List<HalReference> nullLinkList;
+
     private TestResource resource = null;
 
     @HalEmbedded(name = "test")
     private List<TestResource> resources = new ArrayList<>();
+
+    @HalEmbedded(name = "test2")
+    private List<TestResource> nullResources;
 
     @HalEmbedded(name = "children")
     private List<TestChildResource> children = new ArrayList<>();
@@ -81,6 +87,14 @@ public class TestResource implements HalResource {
 
     public List<TestResource> getResources() {
         return resources;
+    }
+
+    public List<TestResource> getNullResources() {
+        return nullResources;
+    }
+
+    public List<HalReference> getNullLinkList() {
+        return nullLinkList;
     }
 
     public List<TestChildResource> getChildren() {

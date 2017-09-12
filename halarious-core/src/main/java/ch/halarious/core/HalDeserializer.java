@@ -24,6 +24,7 @@ import com.google.gson.JsonParseException;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -133,7 +134,8 @@ public class HalDeserializer implements JsonDeserializer<HalResource> {
                 // Collection auslesen
                 Collection collection = (Collection) HalReflectionHelper.getValue(field, result);
                 if (collection == null) {
-                    throw new HalDeserializingException("Collection is null; no values can be added");
+                    collection = new ArrayList<>();
+                    HalReflectionHelper.setValue(result, field, collection);
                 }
 
                 JsonArray jsonArray = jsonField.getAsJsonArray();
@@ -159,18 +161,19 @@ public class HalDeserializer implements JsonDeserializer<HalResource> {
                 }
             }
         } else if (Collection.class.isAssignableFrom(field.getType())) {
-        	
-        	Collection collection = (Collection) HalReflectionHelper.getValue(field, result);
-        	
+            
+            Collection collection = (Collection) HalReflectionHelper.getValue(field, result);
+            
             // Generischer Type auslesen
             ParameterizedType gType = (ParameterizedType) field.getGenericType();
             Type[] actualTypeArguments = gType.getActualTypeArguments();
 
             if (collection == null) {
-                throw new HalDeserializingException("Collection is null; no values can be added");
+                collection = new ArrayList<>();
+                HalReflectionHelper.setValue(result, field, collection);
             }
 
-        	// Wir erwarten ein JSON-Array
+            // Wir erwarten ein JSON-Array
             if (jsonField.isJsonArray()) {
 
                 JsonArray jsonArray = jsonField.getAsJsonArray();
@@ -183,7 +186,7 @@ public class HalDeserializer implements JsonDeserializer<HalResource> {
             }
             else if(jsonField.isJsonObject())
             {
-            	writeEmbeddedInCollection(collection, actualTypeArguments[0], jsonField, context);
+                writeEmbeddedInCollection(collection, actualTypeArguments[0], jsonField, context);
             }
         }
     }
