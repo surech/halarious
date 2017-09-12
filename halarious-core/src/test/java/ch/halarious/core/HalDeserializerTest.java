@@ -27,9 +27,9 @@ import org.junit.Test;
  * @author surech
  */
 public class HalDeserializerTest {
-    
+
     private Gson gson;
-    
+
     @Before
     public void before() {
         // GSON erstellen
@@ -104,7 +104,7 @@ public class HalDeserializerTest {
 
     @Test
     public void testHalResourceCollection() {
-        String json = "{ \"_links\":{ \"reference\":{ \"href\":\"/path/3141\", \"title\":\"Ein Titel\" } }, \"_embedded\":{ \"resource\":{ \"filledText\":\"Inneres Objekt\" }, \"test\":[ { \"_links\":{ \"self\": { \"href\": \"/path/2717\" } }, \"filledText\":\"Erstes Objekt\" }, { \"filledText\":\"Zweites Objekt\" } ] }, \"filledText\":\"Ein Text\" } ";
+        String json = "{ \"_links\":{ \"reference\":{ \"href\":\"/path/3141\", \"title\":\"Ein Titel\" } }, \"_embedded\":{ \"resource\":{ \"filledText\":\"Inneres Objekt\" }, \"test\":[ { \"_links\":{ \"self\": { \"href\": \"/path/2717\" } }, \"filledText\":\"Erstes Objekt\" }, { \"filledText\":\"Zweites Objekt\" } ], \"test2\":[ { \"_links\":{ \"self\": { \"href\": \"/path/2718\" } }, \"filledText\":\"Dritte Objekt\" }, { \"filledText\":\"Vierte Objekt\" } ], \"filledText\":\"Ein Text\" } }";
         TestResource result = (TestResource) gson.fromJson(json, HalResource.class);
 
         // Überprüfen
@@ -114,15 +114,18 @@ public class HalDeserializerTest {
         Assert.assertEquals("/path/2717", result.getResources().get(0).getLinkText());
         Assert.assertEquals("Erstes Objekt", result.getResources().get(0).getFilledText());
         Assert.assertEquals("Zweites Objekt", result.getResources().get(1).getFilledText());
+        Assert.assertEquals("/path/2718", result.getNullResources().get(0).getLinkText());
+        Assert.assertEquals("Dritte Objekt", result.getNullResources().get(0).getFilledText());
+        Assert.assertEquals("Vierte Objekt", result.getNullResources().get(1).getFilledText());
     }
-    
+
     @Test
     public void testHalResourceObjectToCollection() {
-    	String json = "{\"_embedded\": { \"test\":{ \"_links\":{ \"self\": { \"href\": \"/path/2717\" }}}}, \"filledText\":\"Ein Text\" }";
-    	
-    	TestResource result = (TestResource) gson.fromJson(json, HalResource.class);
-    	
-    	Assert.assertEquals("Ein Text", result.getFilledText());
-    	Assert.assertEquals("/path/2717", result.getResources().get(0).getLinkText());
+        String json = "{\"_embedded\": { \"test\":{ \"_links\":{ \"self\": { \"href\": \"/path/2717\" }}}}, \"filledText\":\"Ein Text\" }";
+
+        TestResource result = (TestResource) gson.fromJson(json, HalResource.class);
+
+        Assert.assertEquals("Ein Text", result.getFilledText());
+        Assert.assertEquals("/path/2717", result.getResources().get(0).getLinkText());
     }
 }
